@@ -8,18 +8,32 @@
 let url = document.getElementById("url");
 let url_submit = document.getElementById("url_submit");
 let url_result = document.getElementById("url-result");
-url_submit.addEventListener('click',showWindowHref);
-function showWindowHref(){
+url_submit.addEventListener('click', showWindowHref);
 
+function showWindowHref() {
+    let begin = url.value.indexOf("name=") + 5;
+    let end = url.value.indexOf("&");
+    url_result.value = url.value.substring(begin, end);
 }
+
 //2. 每隔五秒运行一次函数直到某一整分钟停止，比如从20:55:45运行到20:56:00停止；或者运行10次，先到的为准。从1开始每过五秒，输入框内数值翻倍。初始值为1。
 //注意：你可以在函数 timeTest内部 和 timeTest外部 写代码使得该功能实现。
 //与设置时间相关的函数可以上网查找。
 
 //提示：mul为html中id为"mul"的元素对象，可直接通过mul.value获得其内的输入值。
 let mul = document.getElementById("mul");
-function timeTest(){
+mul.value = 1;
+let minute = new Date().getMinutes();
+let times = 0;
+const time = window.setInterval("timeTest()", 5000);
+
+function timeTest() {
+    times++;
+    if (times <= 10 && new Date().getMinutes() === minute) {
+        mul.value *= 2;
+    } else window.clearInterval(time);
 }
+
 //3. 判断输入框most里出现最多的字符，并统计出来。统计出是信息在most_result输入框内以"The most character is:" + index + " times:" + max的形式显示。
 //如果多个出现数量一样则选择一个即可。
 //请仅在arrSameStr函数内写代码。
@@ -28,7 +42,34 @@ function timeTest(){
 let most = document.getElementById("most");
 let result = document.getElementById("most-result");
 let most_submit = document.getElementById("most_submit");
-most_submit.addEventListener('click',arrSameStr);
-function arrSameStr(){
+most_submit.addEventListener('click', arrSameStr);
 
+function arrSameStr() {
+    let most_char = [[most.value.charAt(0),0]];
+    let most_char_position = 0;
+    for(let i = 0 ; i < most.value.length ; i++){
+    	let times = 0;
+        for(let j = 0 ; j< most_char.length ; j++){
+            if(most.value.charAt(i) === most_char[j][0]){
+            	most_char[j][1]++;
+            	times++;
+            }
+            else times = 0;
+        }
+        if(times === 0 ){
+        	most_char.push([most.value.charAt(i), 1]);
+        }
+    }
+
+    for(let i=0 ; i<most_char.length ; i++){
+    	if(most_char[i][1]>most_char[most_char_position][1]){
+    		most_char_position = i;
+    	}
+    }
+    result.value = "";
+    for(let i=0 ; i<most_char.length ; i++){
+    	if(most_char[i][1]===most_char[most_char_position][1]){
+        result.value += "The most character is:" + most_char[i][0] + "    times:" + most_char[i][1] +"   ";
+        }
+    }
 }
