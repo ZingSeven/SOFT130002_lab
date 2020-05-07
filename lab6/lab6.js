@@ -9,11 +9,22 @@
     ①要求使用JS闭包的方式使得计数实现局部私有，不可以在全局区域声明计数变量。
     ②使用console.log打印计数即可，到达一分钟提前停止也需要console.log相应的提示语句。
 */
-
+let getTime;
+const time = window.setInterval("getTime()",5000);
 function testTime(){
-
+    let value = 1;
+    console.log(value);
+    let countTimes = 1;
+    let minute = new Date().getMinutes();
+    getTime = function(){
+        if (countTimes++ <= 10 && new Date().getMinutes() === minute) {
+        	value *= 2;
+        }
+        else window.clearTnterval(time);
+        console.log(value);
+    }
 }
-// testTime();
+testTime();
 
 /*
 2.
@@ -24,7 +35,13 @@ function testTime(){
     ④telephone与mail均是字符串。
 */
 function testMail(telephone,mail) {
-
+    let rightNumber = /^(133|149|153|162|170|173|174|180|181|189|190|191|193|199|130|131|132|140|145|146|155|156|166|167|170|171|175|176|185|186|196|134|135|136|137|138|139|147|148|150|151|152|157|158|159|165|170|172|178|182|183|184|187|188|195|197|198|192)\d{8}$/;
+    let isNumber = "wrong";
+    if (telephone.test(rightNumber)) {isNumber="right";}
+    let rightMail = /^[\w-]+(\.[\w]+)*@([\w-]+\.)+[a-zA-z]{2,7}$/；
+    let isMail = "wrong";
+    if (mail.test(rightMail)) {isMail="right"};
+    console.log("The telephone is " + isNumber + " and the mail is " + isMail + "!");
 }
 
 /*
@@ -37,7 +54,31 @@ function testMail(telephone,mail) {
     ⑤str为字符串。
 */
 function testRedundancy(str) {
-
+	function compare(str1, str2) {
+        if (str1[0] < str2[0]) return -1;
+        else if (str1[0] > str2[0]) return 1;
+        else return 0;
+    }
+    let set = new Set();
+    let pattern = /\b([a-z]+)\s+\1\b/ig;
+    for (let i of str.match(pattern)){
+    	set.add(i);
+    }
+    if (set.size > 10) {
+    	let array = new Array();
+    	for(let value of set){
+    	   array.push(value);
+    	}
+    	array.sort(compare);
+    	set.clear();
+    	set = new Set(array.slice(0, 10))
+    	for (let i of set) {
+    		console.log(i);
+        }
+    }
+    else for (let i of set) {
+    	console.log(i);
+        }
 }
 
 
@@ -56,7 +97,16 @@ function testRedundancy(str) {
     ①注意联系生活，并注意观察我给的上述例子。
 */
 function testKeyBoard(wantInput, actualInput) {
-
+    let wantInputNew = wantInput.toLocaleUpperCase();
+    let actualInputNew = actualInput.toLocaleUpperCase();
+    let wantInputArray = Array.from(wantInputNew);
+    let actualInputArray = Array.from(actualInputNew);
+    let wantInputSet = new Set(wantInputArray);
+    let actualInputSet = new Set(actualInputArray);
+    let difference = new Set([...wantInputSet].filter(x => !actualInputSet.has(x)));
+    for(let i of difference){
+    	console.log(i);
+    }
 }
 
 /*
@@ -72,6 +122,16 @@ function testKeyBoard(wantInput, actualInput) {
     ⑤str为字符串。
 */
 function testSpecialReverse(str) {
+	let pattern = /\S+/;
+	let reverseStr = "";
+	let array = str.match(pattern);
+	array = array.reverse();
+	for(let i in array){
+		if(i < array.length-1)
+			reverseStr += array[i]+" ";
+		else reverseStr += array[i];
+	}
+	console.log(reverseStr);
 }
 
 /*
@@ -90,6 +150,19 @@ function testSpecialReverse(str) {
 */
 
 function twoSum(nums, target) {
+	let map = new Map();
+	for (let i = 0; i < nums.length; i++){
+		map.set(i, nums[i]);
+	} 
+	
+	map.forEach((value1, key1) => {
+        map.forEach((value2, key2) => {
+            if (value1 + value2 === target && key1 <= key2) {
+            	console.log("["+key1+","+key2+"]");
+            }
+        })
+    });
+    
 }
 
 
@@ -99,12 +172,35 @@ function twoSum(nums, target) {
     打印最长的包含不同字符串的子字符串长度。
 要求：
     ①使用Map。
-    ②例如：输入"abbbbb",输出1，输入"bbbbb",输出2；
+    ②例如：输入"abbbbb",输出2，输入"bbbbb",输出1；
     ③只能显式使用一次循环。
     ④使用console.log打印即可。
     ⑤str为字符串。
 */
 function lengthOfLongestSubstring(str) {
+	let max = 0;
+	let map = new Map();
+	for(let i=0 ; i<str.length ; i++){
+		char = str.charAt(i);
+		if(i===0){
+            map.set(char,i);
+            max = 1;
+		}
+		else if(!map.has(char)){
+            map.set(char,i);
+            if(map.size > max)
+            	max = map.size;
+		}
+		else{
+			let j = map.has(char);
+			map.clear();
+			for(let newStart = j+1 ; newStart<=i ; newStart++){
+				map.set(str.charAt(newStart),newStart);
+				max = max < map.size ? map.size : max ;
+			}
+		}
+	}
+	console.log(max);
 }
 
 /*
@@ -119,3 +215,29 @@ function lengthOfLongestSubstring(str) {
 function Country() {
     this.name = "国家";
 }
+function DevelopingCountry() {
+    Country.call(this);
+    this.sayHi = function () {
+        document.write("Hi, I am a developing country.<br>");
+    }
+}
+
+var Country1 = new DevelopingCountry();
+Country1.sayHi();
+
+function PoorCountry() {
+}
+
+PoorCountry.prototype = new Country();
+PoorCountry.prototype.saySad = function () {
+    document.write("I am a sad poor country.<br>");
+};
+var Country2 = new PoorCountry();
+Country2.saySad();
+
+var developedCountry = Object.create(new Country());
+developedCountry.sayHappy = function () {
+    document.write("I am a happy developed country.");
+};
+developedCountry.sayHappy();
+
