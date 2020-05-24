@@ -2,7 +2,15 @@
 /*请在该区域内声明或者获取所要使用的全局变量*/
 /********************************************begin************************************/
 
-/*Global Variable Area */
+var container = document.getElementsByClassName("container")[0];
+var wrap = document.getElementsByClassName("wrap")[0];
+var buttons = document.getElementsByClassName("buttons")[0];
+var arrowLeft = document.getElementsByClassName("arrow_left")[0];
+var arrowRight = document.getElementsByClassName("arrow_right")[0];
+var timing = window.setInterval("pictureNext();", 2000);
+var trGroup = document.getElementsByTagName("tr");
+var imageNumber = 1;
+
 
 /*********************************************end*************************************/
 
@@ -22,7 +30,25 @@
  */
 /********************************************begin************************************/
 
-/*Code Here*/
+arrowLeft.onclick = pictureLast;
+arrowRight.onclick = pictureNext;
+
+function pictureLast() {
+    buttons.childNodes.item(2 * imageNumber - 1).classList.toggle("on");
+    imageNumber--;
+    if (imageNumber === 0) imageNumber = 5;
+    buttons.childNodes.item(2 * imageNumber - 1).classList.toggle("on");
+    wrap.style.left = (-600 * imageNumber) + "px";
+}
+
+function pictureNext() {
+    buttons.childNodes.item(2 * imageNumber - 1).classList.toggle("on");
+    imageNumber++;
+    if (imageNumber === 6) imageNumber = 1;
+    buttons.childNodes.item(2 * imageNumber - 1).classList.toggle("on");
+    wrap.style.left = (-600 * imageNumber) + "px";
+}
+
 
 /*********************************************end*************************************/
 
@@ -39,7 +65,18 @@
  */
 /********************************************begin************************************/
 
-/*Code Here*/
+window.onload = function () {
+    document.onmousemove = function (e) {
+        if (container.contains(e.target)) container.onmouseenter();
+        document.onmousemove = null;
+    }
+};
+container.onmouseenter = function () {
+    window.clearInterval(timing);
+};
+container.onmouseleave = function () {
+    timing = window.setInterval("pictureNext();", 2000);
+};
 
 /*********************************************end*************************************/
 
@@ -54,7 +91,21 @@
  */
 /********************************************begin************************************/
 
-/*Code Here*/
+for (let n = 1; n <= 5; n++) buttons.childNodes.item(2 * n - 1).onclick = function () {
+
+    buttons.childNodes.item(2 * imageNumber - 1).classList.toggle("on");
+    buttons.childNodes.item(2 * (imageNumber = n) - 1).classList.toggle("on");
+    wrap.style.left = (-600 * n) + "px";
+};
+container.onmouseenter = function () {
+    window.clearInterval(timing);
+};
+container.onmouseleave = function () {
+    timing = window.setInterval("pictureNext();", 2000);
+};
+
+
+
 
 /*********************************************end*************************************/
 
@@ -67,7 +118,15 @@
  * ③本部分可以使用jQuery，也可以使用原生JS。
  */
 /********************************************begin************************************/
-
-/*Code Here*/
-
+for (let i = 1; i <= 4; i++) {
+    for (let j = 1; j <= 3; j++) trGroup.item(i).childNodes.item(2 * j - 1).onclick = function () {
+        let td = trGroup.item(i).childNodes.item(2 * j - 1);
+        let textArea = document.createElement("input");
+        textArea.type = "text";
+        textArea.style.width = "158px";
+        textArea.value = td.firstChild.textContent;
+        td.replaceChild(textArea, td.firstChild);
+        textArea.focus();
+    };
+}
 /*********************************************end*************************************/
