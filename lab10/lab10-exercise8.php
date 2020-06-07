@@ -92,6 +92,25 @@ function outputSinglePainting($row) {
          </div>
       </div>
    </main>
+   <main class="ui container">
+         <div class="ui secondary segment">
+            <h1>User Input</h1>
+         </div>
+         <div class="ui segment">
+            <div class="ui grid">
+               <div class="four wide column">
+                  <div class="ui link list">
+                     <?php outputArtists(); ?>
+                  </div>
+               </div>
+               <div class="twelve wide column">
+                  <div class="ui items">
+                     <?php outputPaintings(); ?>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </main>
 
 </body>
 </html>
